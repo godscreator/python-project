@@ -10,10 +10,10 @@ class log:
     def initialize(self,start,end):
         days = [31,28,31,30,31,30,31,31,30,31,30,31]
         for i in range(start,end+1):
-            if isLeapYear(year):
+            if isLeapYear(i):
                 days[1] = 29
             self.cal[i] = {}
-            for j in (1,13):
+            for j in range(1,13):
                 self.cal[i][j] = []
                 for k in range(1,days[j-1]):
                     self.cal[i][j].append(False)
@@ -35,9 +35,9 @@ class log:
              return True
         except :
             return "error"
-    def setIn(self,start,end): #start ==> [date,month,year]
+    def setIn(self,start,end,val): #start ==> [date,month,year]
         for i in range(start[2],end[2]+1):
             for j in range(start[1],end[1]+1):
                 for k in range(start[0],end[0]+1):
-                     self.set(k,j,i,True) 
+                     self.set(k,j,i,val) 
         return True

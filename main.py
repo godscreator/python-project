@@ -1,41 +1,47 @@
 from hotel import *
 import pickle
-def search(hotels,loc,ind,outd,noa,noc):
-    t = []
-    for i in hotels :
-        if i.location == loc :
-            u = []
-            for j in i._rooms:
-                if j._book.getIn(ind,outd) == False and noa == j.no_of_adults and noc == j.no_of_children:
-                    u.append(j)
-            if len(u) > 0:
-                t.append(u)
-    return t
-##f = open("hotel.dat","ab")
-##a = input("Enter no. of hotels :")
-##for i in range(a):
-##    h = Hotel()
-##    h.input()
-##    pickle.dump(h,f)
-##f.close()
-f = open("hotel.dat","rb")
-hotels = []
-while True:
-    try:
-        hotels.append(pickle.load(f))
-    except EOFError:
-        break        
-f.close()
-print "Enter Search details:"
-loc = raw_input("Enter Location:")
-ind = eval(raw_input("check in date"))
-outd = eval(raw_input("check out date"))
-noa = raw_input("Enter no of adults:")
-noc  = raw_input("Enter no of children:")
-results = search(hotels,loc,ind,outd,noa,noc)
-for i in results:
-    print "*"*20
-    i[0]._hotel.show(i)
-    print "*"*20
+
+def inputHotels():
+    a = input("Enter no. of hotels :")
+    for i in range(a):
+        h = Hotel()
+        h.input()
+        f = open(h.name+".dat","wb")
+        g = open("hotels.txt","ab")
+        g.writelines([h.name+"\n"])
+        g.close()
+        pickle.dump(h,f)
+    f.close()
+def search(loc,ind,outd,noa,noc):
+    log = register.getRegister()
+    t = log.getIn(ind,outd)
+    u = [i.partition("_") for i in t]
+    v = {} # {hotel name:[rooms]}
+    for i in range(len(u)):
+        f = open(u[i][0]+".dat","rb")
+        hotel = pickle.load(f)
+        if hotel.location == loc:
+            room = hotel._rooms[hotel._room_nos.index(u[i][2])]
+            if room.no_of_adults == str(noa) and room.no_of_children == str(noc):
+                if v.has_key(hotel.name):
+                    v[hotel.name].append(room)
+                else:
+                    v[hotel.name] = [room]
+        f.close()
+    return v
+def showResults(v,ind,outd):
+    if v == {}:
+        print "No match found!"
+    else:
+        for i in v:
+            f = open(i+".dat","rb")
+            h = pickle.load(f)
+            h.show(ind,outd,v[i])
+            f.close()
+
+##inputHotels()
+k = search("Varanasi",[15,3,2018],[20,3,2018],2,0)
+showResults(k,[15,3,2018],[20,3,2018])
+
 v = raw_input("end:")
 

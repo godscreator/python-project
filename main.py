@@ -12,6 +12,27 @@ def inputHotels():
         g.write("\n"+h.name)
         g.close()
     f.close()
+def modifyHotel(hotelname):
+    f = open(hotelname+".dat","rb")
+    l = pickle.load(f)
+    f.close()
+    l.modify()
+    if hotelname != l.name:
+        print "Cannot change Name."
+        return 0
+    f = open(hotelname+".dat","wb")
+    pickle.dump(l,f)
+    f.close()
+def modifyRoom(hotelname,roomno):
+    f = open(hotelname+".dat","rb")
+    l = pickle.load(f)
+    f.close()
+    i = l._room_nos.index(roomno)
+    r = l._rooms[i]
+    r.modify()
+    f = open(hotelname+".dat","wb")
+    pickle.dump(l,f)
+    f.close()
 def search(loc,ind,outd,noa,noc):
     log = register.get()
     t = log.getIn(ind,outd)
@@ -39,9 +60,5 @@ def showResults(v,ind,outd):
             h.show(ind,outd,v[i])
             f.close()
 
-##inputHotels()
-k = search("Varanasi",[15,3,2018],[20,3,2018],2,0)
-showResults(k,[15,3,2018],[20,3,2018])
 
-v = raw_input("end:")
 

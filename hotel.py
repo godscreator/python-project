@@ -29,17 +29,26 @@ class room:
         log = register.get()
         log.addRoom(self._room_no,self._hotel_name)
         register.set(log)
-
-    def show(self ,ind,outd ,space):
+        
+    def modify(self):
+        l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
+        for i in l:
+            if i[0] != "_":
+                v = raw_input(i.title()+" .:  ")
+                if v:
+                    self.__dict__ [i] = v
+        
+    def show(self ,Book =[]  ,space = 0):
         l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
         for i in l:
             if i[0] != "_":
                t = str(i.title())+" : "
                print (space-len(t))*" " + t + str(self.__dict__[i])
-        g = raw_input("\n Book now:")
-        if g !="no" and g!="n" and g:
-            self.book(ind,outd)
-            print "Booking Complete!.."
+        if Book:
+            g = raw_input("\n Book now:")
+            if g !="no" and g!="n" and g:
+                self.book(Book[0],Book[1])
+                print "Booking Complete!.."
 
 class Hotel:
     def __init__(self):
@@ -61,13 +70,26 @@ class Hotel:
         n = input("Enter no. of rooms : ")
         print "Enter the details of rooms : "
         for i in range(1,n+1):
-            rno = raw_input("Enter the room number:")
-            r = room(rno,self.name)
-            r.input()
-            self._room_nos.append(rno)
-            self._rooms.append(r)
-            print " "*10,"-"*50
-    def show(self ,ind,outd,rooms, space = 30):
+            self.addRoom()
+            
+    def addRoom(self):
+        rno = raw_input("Enter the room number:")
+        r = room(rno,self.name)
+        r.input()
+        self._room_nos.append(rno)
+        self._rooms.append(r)
+        print " "*10,"-"*50
+    def modify(self):
+        l = ["name","location","type","meal","reservation_policy","property_details","area_details"]
+        for i in l:
+            if i[0] != "_":
+                v = raw_input(i.title()+" .:  ")
+                if v:
+                    self.__dict__ [i] = v
+        
+    def show(self ,Book =[],rooms = "ALL", space = 30):
+        if rooms == "ALL":
+            rooms = self._rooms
         l = ["name","location","type","meal","reservation_policy","property_details","area_details"]
         for i in l:
             if i[0] != "_":
@@ -75,5 +97,5 @@ class Hotel:
                print (space-len(t))*" " + t.title() + str(self.__dict__[i])
         print "\nRoom details:"
         for i in rooms:
-            i.show(ind,outd,space)
+            i.show(Book,space)
             print "-"*space*2

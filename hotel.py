@@ -17,28 +17,30 @@ class room:
         self.housekeeping = ""
        
     def book(self,ind,outd): #  ind = check in date , outd = check out date
-         log = register.getRegister()
+         log = register.get()
          log.setIn(ind,outd,self._room_no,self._hotel_name,True)
-         register.setRegister(log)
+         register.set(log)
 
     def input(self):
         l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
         for i in l:
             if i[0] != "_":
                 self.__dict__ [i] = raw_input(i.title()+" :  ")
-        log = register.getRegister()
+        log = register.get()
         log.addRoom(self._room_no,self._hotel_name)
-        register.setRegister(log)
-    def show(self ,ind,outd ,spare):
+        register.set(log)
+
+    def show(self ,ind,outd ,space):
         l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
         for i in l:
             if i[0] != "_":
                t = str(i.title())+" : "
-               print (spare-len(t))*" " + t + str(self.__dict__[i])
+               print (space-len(t))*" " + t + str(self.__dict__[i])
         g = raw_input("\n Book now:")
         if g !="no" and g!="n" and g:
             self.book(ind,outd)
-            print "Done!.."
+            print "Booking Complete!.."
+
 class Hotel:
     def __init__(self):
         self._rooms = []
@@ -64,14 +66,14 @@ class Hotel:
             r.input()
             self._room_nos.append(rno)
             self._rooms.append(r)
-            print "-"*20
-    def show(self ,ind,outd,rooms, spare = 25):
+            print " "*10,"-"*50
+    def show(self ,ind,outd,rooms, space = 30):
         l = ["name","location","type","meal","reservation_policy","property_details","area_details"]
         for i in l:
             if i[0] != "_":
                t = str(i)+" .: "
-               print (spare-len(t))*" " + t.title() + str(self.__dict__[i])
+               print (space-len(t))*" " + t.title() + str(self.__dict__[i])
         print "\nRoom details:"
         for i in rooms:
-            i.show(ind,outd,spare)
-            print "-"*spare*2
+            i.show(ind,outd,space)
+            print "-"*space*2

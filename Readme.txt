@@ -1,0 +1,1 @@
+1. Purpose of init is to create register.

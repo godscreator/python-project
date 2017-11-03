@@ -7,13 +7,13 @@ def inputHotels():
         h = Hotel()
         h.input()
         f = open(h.name+".dat","wb")
-        g = open("hotels.txt","ab")
-        g.writelines([h.name+"\n"])
-        g.close()
         pickle.dump(h,f)
+        g = open("hotels.txt","ab")
+        g.write("\n"+h.name)
+        g.close()
     f.close()
 def search(loc,ind,outd,noa,noc):
-    log = register.getRegister()
+    log = register.get()
     t = log.getIn(ind,outd)
     u = [i.partition("_") for i in t]
     v = {} # {hotel name:[rooms]}
@@ -31,7 +31,7 @@ def search(loc,ind,outd,noa,noc):
     return v
 def showResults(v,ind,outd):
     if v == {}:
-        print "No match found!"
+        print "No results!"
     else:
         for i in v:
             f = open(i+".dat","rb")

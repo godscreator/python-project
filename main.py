@@ -1,6 +1,6 @@
 from hotel import *
 import pickle
-
+import os
 def inputHotels():
     a = input("Enter no. of hotels :")
     for i in range(a):
@@ -17,9 +17,6 @@ def modifyHotel(hotelname):
     l = pickle.load(f)
     f.close()
     l.modify()
-    if hotelname != l.name:
-        print "Cannot change Name."
-        return 0
     f = open(hotelname+".dat","wb")
     pickle.dump(l,f)
     f.close()
@@ -30,6 +27,20 @@ def modifyRoom(hotelname,roomno):
     i = l._room_nos.index(roomno)
     r = l._rooms[i]
     r.modify()
+    f = open(hotelname+".dat","wb")
+    pickle.dump(l,f)
+    f.close()
+def delHotel(hotelname):
+    f = open(hotelname+".dat","rb")
+    l = pickle.load(f)
+    f.close()
+    l.delHotel()
+    os.remove(hotelname+".dat")
+def delRoom(hotelname,roomno):
+    f = open(hotelname+".dat","rb")
+    l = pickle.load(f)
+    f.close()
+    l.delRoom(roomno)
     f = open(hotelname+".dat","wb")
     pickle.dump(l,f)
     f.close()

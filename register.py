@@ -25,7 +25,13 @@ class log:
             for j in self.cal[i]:
                 for k in self.cal[i][j]:
                     self.cal[i][j][k].append(False)
-        
+    def delRoom(self,roomno,hotelname):
+        a = self.rooms.index(hotelname+"_"+roomno)
+        for i in self.cal:
+            for j in self.cal[i]:
+                for k in self.cal[i][j]:
+                    self.cal[i][j][k].pop(a)
+        self.rooms.pop(a)
     def getIn(self,start,end): #start/end ==> [date,month,year]
         t =  [False for i in range(len(self.rooms))] # initial list , assuming no room is booked.
         for i in range(start[2],end[2]+1): # year

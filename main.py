@@ -57,7 +57,7 @@ def showResults(v,ind,outd):
         for i in v:
             f = open(i+".dat","rb")
             h = pickle.load(f)
-            h.show(ind,outd,v[i])
+            h.show([ind,outd],v[i])
             f.close()
 
 

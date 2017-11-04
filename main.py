@@ -1,17 +1,23 @@
 from hotel import *
 import pickle
 import os
+import register
 def inputHotels():
-    a = input("Enter no. of hotels :")
+    while True:
+        try:
+            a = int(raw_input("Enter no. of hotels : "))
+            break
+        except ValueError:
+            print "Number of hotels should be a number."
     for i in range(a):
         h = Hotel()
         h.input()
         f = open(h.name+".dat","wb")
         pickle.dump(h,f)
         g = open("hotels.txt","ab")
-        g.write("\n"+h.name)
+        g.write(h.name)
         g.close()
-    f.close()
+        f.close()
 def modifyHotel(hotelname):
     f = open(hotelname+".dat","rb")
     l = pickle.load(f)

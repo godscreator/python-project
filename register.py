@@ -9,6 +9,12 @@ class log:
         self.cal ={}
         self.rooms = []
         self.initialize(start,end)
+    def isValidDate(self,date):
+        try:
+            self.cal[date[2]][date[1]][date[0]]
+            return True
+        except KeyError:
+            return False
     def initialize(self,start,end):
         days = [31,28,31,30,31,30,31,31,30,31,30,31]
         for i in range(start,end+1):
@@ -33,19 +39,23 @@ class log:
                     self.cal[i][j][k].pop(a)
         self.rooms.pop(a)
     def getIn(self,start,end): #start/end ==> [date,month,year]
-        t =  [False for i in range(len(self.rooms))] # initial list , assuming no room is booked.
-        for i in range(start[2],end[2]+1): # year
-            for j in range(start[1],end[1]+1): # month
-                for k in range(start[0],end[0]+1): # days
-                    v =  self.cal[i][j][k-1]
-                    for l in range(len(v)):
-                        if v[l] == True:    # if booked already then correcting initial list
-                            t[l] = True
-        r = [] # list to contain non-booked rooms id.
-        for a in range(len(t)):
-            if t[a] == False:
-                r.append(self.rooms[a])
-        return r
+        if self.isValidDate(start) and self.isValidDate(end):
+            t =  [False for i in range(len(self.rooms))] # initial list , assuming no room is booked.
+            for i in range(start[2],end[2]+1): # year
+                for j in range(start[1],end[1]+1): # month
+                    for k in range(start[0],end[0]+1): # days
+                        v =  self.cal[i][j][k-1]
+                        for l in range(len(v)):
+                            if v[l] == True:    # if booked already then correcting initial list
+                                t[l] = True
+            r = [] # list to contain non-booked rooms id.
+            for a in range(len(t)):
+                if t[a] == False:
+                    r.append(self.rooms[a])
+            return r
+        else:
+            print "Invalid date entered.. (note:date should be within year 2000 and 2050)"
+            return []
    
     def setIn(self,start,end,roomno,hotelname,val): #start/end ==> [date,month,year]
         for i in range(start[2],end[2]+1):

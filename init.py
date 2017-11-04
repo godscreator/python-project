@@ -1,4 +1,4 @@
 import register
 print "for ...."
-register.setRegister(register.log())
+register.set(register.log())
 print " ....init"

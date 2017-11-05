@@ -17,48 +17,46 @@ mmenu =\
 def main():
     while True:
         print mmenu
-        try:
-            c = raw_input("Enter your choice:")
-            if c=="1":
-                find()
-            elif c == "2":
-                inputHotels()
-            elif c== "3":
-                hname = raw_input("Enter hotel name:")
-                f = open(hname+".dat","rb")
-                h = pickle.load(f)
-                f.close()
-                h.addRoom()
-                f = open(hname+".dat","wb")
-                pickle.dump(h,f)
-                f.close()
-            elif c == "4":
-                hname = raw_input("Enter hotel name:")
-                modifyHotel(hname)
-            elif c=="5":
-                hname = raw_input("Enter hotel name:")
-                roomno = raw_input("Enter room no:")
-                modifyRoom(hname,roomno)
-            elif c == "6":
-                hname = raw_input("Enter hotel name:")
-                delHotel(hname)
-            elif c=="7":
-                hname = raw_input("Enter hotel name:")
-                roomno = raw_input("Enter room no:")
-                delRoom(hname,roomno)
-            elif c == "0":
-                break
-            else:
-                print "Wrong Choice"
-        except :
-            pass
+        c = raw_input("Enter your choice:")
+        if c=="1":
+            find()
+        elif c == "2":
+            inputHotels()
+        elif c== "3":
+            hname = raw_input("Enter hotel name:")
+            f = open(hname+".dat","rb")
+            h = pickle.load(f)
+            f.close()
+            h.addRoom()
+            f = open(hname+".dat","wb")
+            pickle.dump(h,f)
+            f.close()
+        elif c == "4":
+            hname = raw_input("Enter hotel name:")
+            modifyHotel(hname)
+        elif c=="5":
+            hname = raw_input("Enter hotel name:")
+            roomno = raw_input("Enter room no:")
+            modifyRoom(hname,roomno)
+        elif c == "6":
+            hname = raw_input("Enter hotel name:")
+            delHotel(hname)
+        elif c=="7":
+            hname = raw_input("Enter hotel name:")
+            roomno = raw_input("Enter room no:")
+            delRoom(hname,roomno)
+        elif c == "0":
+            break
+        else:
+            print "Wrong Choice"
+       
             
 def find():
     print "Enter Search details:"
     while True:
         loc = raw_input("Location : ")
         if not(loc):
-            print "location not entered."
+            print "Location not entered."
             continue
         break
     while True:

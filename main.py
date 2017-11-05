@@ -50,22 +50,26 @@ def delRoom(hotelname,roomno):
     f = open(hotelname+".dat","wb")
     pickle.dump(l,f)
     f.close()
-def search(loc,ind,outd,noa,noc):
-    log = register.get()
+
+@register.savelog
+def search(loc,ind,outd,noa,noc,log=None):
     t = log.getIn(ind,outd)
     u = [i.partition("_") for i in t]
     v = {} # {hotel name:[rooms]}
     for i in range(len(u)):
-        f = open(u[i][0]+".dat","rb")
-        hotel = pickle.load(f)
-        if hotel.location == loc:
-            room = hotel._rooms[hotel._room_nos.index(u[i][2])]
-            if room.no_of_adults == str(noa) and room.no_of_children == str(noc):
-                if v.has_key(hotel.name):
-                    v[hotel.name].append(room)
-                else:
-                    v[hotel.name] = [room]
-        f.close()
+        try:
+            f = open(u[i][0]+".dat","rb")
+            hotel = pickle.load(f)
+            if hotel.location == loc:
+                room = hotel._rooms[hotel._room_nos.index(u[i][2])]
+                if room.no_of_adults == str(noa) and room.no_of_children == str(noc):
+                    if v.has_key(hotel.name):
+                        v[hotel.name].append(room)
+                    else:
+                        v[hotel.name] = [room]
+            f.close()
+        except IOError:
+            pass
     return v
 def showResults(v,ind,outd):
     if v == {}:

@@ -64,12 +64,16 @@ class log:
                      l = self.rooms.index(hotelname+"_"+roomno)
                      self.cal[i][j][k-1][l] = val
 
-def set(log):
-    f = open("register.dat","wb")
-    pickle.dump(log,f)
-    f.close()
-def get():
-    f = open("register.dat","rb")
-    v  = pickle.load(f)
-    f.close()
-    return v
+
+def savelog(func):
+    def inner(*args,**kwargs):
+        f = open("register.dat","rb")
+        kwargs["log"]  = pickle.load(f)
+        f.close()
+        v = func(*args,**kwargs)
+        f = open("register.dat","wb")
+        pickle.dump(kwargs["log"],f)
+        f.close()
+        return v
+    return inner
+    

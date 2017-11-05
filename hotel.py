@@ -15,20 +15,18 @@ class room:
         self.internet = ""
         self.entertainment = ""
         self.housekeeping = ""
-       
-    def book(self,ind,outd): #  ind = check in date , outd = check out date
-         log = register.get()
-         log.setIn(ind,outd,self._room_no,self._hotel_name,True)
-         register.set(log)
 
-    def input(self,space = 30):
+    @register.savelog   
+    def book(self,ind,outd,log = None): #  ind = check in date , outd = check out date
+         log.setIn(ind,outd,self._room_no,self._hotel_name,True)
+
+    @register.savelog
+    def input(self,space = 30,log=None):
         l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
         for i in l:
             t = i.title()+" :  "
             self.__dict__ [i] = raw_input((space-len(t))*" "+t)
-        log = register.get()
         log.addRoom(self._room_no,self._hotel_name)
-        register.set(log)
         
     def modify(self,space =30 ):
         l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
@@ -97,13 +95,14 @@ class Hotel:
         self._room_nos.append(rno)
         self._rooms.append(r)
         print "-"*70
-    def delRoom(self,rno):
+        
+    @register.savelog
+    def delRoom(self,rno,log=None):
         i = self._room_nos.index(rno)
         self._room_nos.pop(i)
         self._rooms.pop(i)
-        log = register.get()
         log.delRoom(rno,self.name)
-        register.set(log)
+        
     def delHotel(self):
         for i in self._room_nos:
             self.delRoom(i)

@@ -14,8 +14,7 @@ def menu(options = {} , head = "" , chprint = "Enter your choice : ", align = 0)
                 print "Error : No such option exists."
         except ValueError:
             print "Error: Please enter a number"
-    inloop = infinite(inloop,br = False)
-    inloop()    
+    infinite(inloop,br = False)  
     return l[v-1]
 
 def neoInput(prompt = "", options = {} ,cmdop = "--o",help = "", cmdhl = "--h"  ,align = 0):

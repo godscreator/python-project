@@ -4,25 +4,43 @@ def isLeapYear(year):
         return True
     else:
         return False
-
-def isValidDate(date):
+    
+def getDateIndex(date,month,log):
     try:
-        self.cal[date[2]][date[1]][date[0]]
-        return True
-    except KeyError:
+        return log[0].index(str(date)+"/"+str(month))
+    except IndexError:
         return False
-def initialize(self,start,end):
+    
+def isValidDate(date,log): # date ==> [date,month,year]
+    if str(log[0][0]) == str(date[2]):
+        if getDateIndex(date[0],date[1],log):
+            return True
+        else:
+            return False
+    else:
+        return False
+
+def printlog(log):
+    for i in log:
+        for j in i:
+            print j,
+        print
+        
+def initialize(year):
     days = [31,28,31,30,31,30,31,31,30,31,30,31]
-    for i in range(start,end+1):
-        if isLeapYear(i):
-            days[1] = 29
-        self.cal[i] = {}
-        for j in range(1,13):
-            self.cal[i][j] = {}
-            for k in range(1,days[j-1]):
-                self.cal[i][j][k] = []
-def addRoom(self,roomno,hotelname):
-    self.rooms.append(hotelname+"_"+roomno)
+    if isLeapYear(year):
+        days[1] = 29
+    log = [[]]
+    log[0][0] = year
+    for i in range(1,13):
+        for j in range(1,days[i-1]):
+            log[0].append(str(j)+"/"+str(i))
+    f = open(str(year)+".register","wb")
+    pickle.dump(log,f)
+    f.close()
+            
+def addRoom(rid,hid,log):
+    log.append(hid+"_"+rid)
     for i in self.cal:
         for j in self.cal[i]:
             for k in self.cal[i][j]:

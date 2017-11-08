@@ -50,5 +50,3 @@ def infinite(func,prompt = "",br = False):
             if prompt:
                 print prompt
             break
-v = neoInput("Enter type : ",options = {"good":"good","bad":"bad","worse":"worse"},help = "your score depends on your choice",align =0)
-print "your score:",v

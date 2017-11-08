@@ -5,15 +5,17 @@ def menu(options = {} , head = "" , chprint = "Enter your choice : ", align = 0)
     for i in options:
         print spare+str(len(l)+1)+"."+str(i)
         l.append(options[i])
-    while True:
+    def inloop():
         try:
             v = int(raw_input(spare+chprint))
             if v>0 and v<=len(l):
-                break
+                return False
             else:
                 print "Error : No such option exists."
         except ValueError:
             print "Error: Please enter a number"
+    inloop = infinite(inloop,br = False)
+    inloop()    
     return l[v-1]
 
 def neoInput(prompt = "", options = {} ,cmdop = "--o",help = "", cmdhl = "--h"  ,align = 0):

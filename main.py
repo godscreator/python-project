@@ -1,7 +1,40 @@
 from hotel import *
+from styler import *
 import pickle
 import os
-import register
+
+           
+def find():
+    print "Enter Search details:"
+    loc = neoInput("Location : ",notnull = True)
+    v = []
+    f = open("Hotels.dat","rb")
+    while True:
+        try:
+            obj = pickle.load(f)
+            if obj.location == loc:
+                v.append(obj)
+        except EOFError:
+            break
+    f.close()
+    def func():
+        if v:
+            print " "*10+"Hotel name"+" "*10+"minimum Price"
+            ops ={}
+            for i in v:
+                ops[" "*10+i.name+" "*(20-len(i.name))+"Rs."+str(min([j.price for j in v[v.index(i)]._rooms]))]=i
+            r = menu(options = ops)
+            r.show()
+            y = raw_input("\nSee hotels : ")
+            if y:
+                func()
+            else:
+                return "break"
+        else:
+            print "\n No results found!.."
+    k = infinite(func,br = "break")
+    return "loop"
+
 def inputHotels():
     while True:
         try:
@@ -9,15 +42,13 @@ def inputHotels():
             break
         except ValueError:
             print "Number of hotels should be a number."
+    f = open("Hotels.dat","ab")
     for i in range(a):
         h = Hotel()
         h.input()
-        f = open(h.name+".dat","wb")
-        pickle.dump(h,f)
-        g = open("hotels.txt","ab")
-        g.write(h.name)
-        g.close()
-        f.close()
+        pickle.dump(h,f)  
+    f.close()
+    return "loop"
 def modifyHotel(hotelname):
     f = open(hotelname+".dat","rb")
     l = pickle.load(f)
@@ -50,36 +81,12 @@ def delRoom(hotelname,roomno):
     f = open(hotelname+".dat","wb")
     pickle.dump(l,f)
     f.close()
-
-@register.savelog
-def search(loc,ind,outd,noa,noc,log=None):
-    t = log.getIn(ind,outd)
-    u = [i.partition("_") for i in t]
-    v = {} # {hotel name:[rooms]}
-    for i in range(len(u)):
-        try:
-            f = open(u[i][0]+".dat","rb")
-            hotel = pickle.load(f)
-            if hotel.location == loc:
-                room = hotel._rooms[hotel._room_nos.index(u[i][2])]
-                if room.no_of_adults == str(noa) and room.no_of_children == str(noc):
-                    if v.has_key(hotel.name):
-                        v[hotel.name].append(room)
-                    else:
-                        v[hotel.name] = [room]
-            f.close()
-        except IOError:
-            pass
-    return v
-def showResults(v,ind,outd):
-    if v == {}:
-        print "No results!"
-    else:
-        for i in v:
-            f = open(i+".dat","rb")
-            h = pickle.load(f)
-            h.show([ind,outd],v[i])
-            f.close()
-
-
+def Exit():
+    return "exit"
+def main():
+    print"             *******  WELCOME TO BOOKING.PY  *******"
+    v = menu(options = {"Find":find,"Input hotels":inputHotels,"Exit":Exit},align = 25)
+    return v()
+       
+infinite(main, br = "loop")
 

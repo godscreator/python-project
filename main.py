@@ -1,39 +1,48 @@
 from hotel import *
 from styler import *
 import pickle
-import os
 
-           
+def getHotels():
+    f = open("Hotels.dat","rb")
+    l = []
+    while True:
+        try:
+            l.append(pickle.load(f))
+        except EOFError:
+            break
+    f.close()
+    return l
+def setHotels(l,mode = "a"):
+    f = open("Hotels.dat",mode+"b")
+    for i in l:
+        pickle.dump(i,f)
+    f.close()
+    
 def find():
     print "Enter Search details:"
     loc = neoInput("Location : ",notnull = True)
     v = []
-    f = open("Hotels.dat","rb")
+    l = getHotels()
+    for i in l:
+        if i.location == loc:
+            v.append(i)
     while True:
-        try:
-            obj = pickle.load(f)
-            if obj.location == loc:
-                v.append(obj)
-        except EOFError:
-            break
-    f.close()
-    def func():
         if v:
             print " "*10+"Hotel name"+" "*10+"minimum Price"
             ops ={}
             for i in v:
-                ops[" "*10+i.name+" "*(20-len(i.name))+"Rs."+str(min([j.price for j in v[v.index(i)]._rooms]))]=i
+                if i._rooms!=[]:
+                    ops[" "*10+i.name+" "*(20-len(i.name))+"Rs."+str(min([int(j.price) for j in i._rooms]))]=i
             r = menu(options = ops)
             r.show()
-            y = raw_input("\nSee hotels : ")
+            y = raw_input("\nPress Enter to stop seeing search results : ")
             if y:
-                func()
+                continue
             else:
-                return "break"
+                break
         else:
             print "\n No results found!.."
-    k = infinite(func,br = "break")
-    return "loop"
+    return True
 
 def inputHotels():
     while True:
@@ -42,51 +51,83 @@ def inputHotels():
             break
         except ValueError:
             print "Number of hotels should be a number."
-    f = open("Hotels.dat","ab")
+    v = []
     for i in range(a):
         h = Hotel()
         h.input()
-        pickle.dump(h,f)  
-    f.close()
-    return "loop"
-def modifyHotel(hotelname):
-    f = open(hotelname+".dat","rb")
-    l = pickle.load(f)
-    f.close()
-    l.modify()
-    f = open(hotelname+".dat","wb")
-    pickle.dump(l,f)
-    f.close()
-def modifyRoom(hotelname,roomno):
-    f = open(hotelname+".dat","rb")
-    l = pickle.load(f)
-    f.close()
-    i = l._room_nos.index(roomno)
-    r = l._rooms[i]
-    r.modify()
-    f = open(hotelname+".dat","wb")
-    pickle.dump(l,f)
-    f.close()
-def delHotel(hotelname):
-    f = open(hotelname+".dat","rb")
-    l = pickle.load(f)
-    f.close()
-    l.delHotel()
-    os.remove(hotelname+".dat")
+        v.append(h)
+    setHotels(v,"a")
+    return True
+def modifyHotel():
+    hotelname = raw_input("Enter hotel name: ")
+    roomno = raw_input("Enter room number: ")
+    f = open("Hotels.dat","rb")
+    l = getHotels()
+    for i in l:
+        if i.name == hotelname:
+            i.modify()
+            break
+    else:
+        print "no hotel of such name."
+    setHotels(l,"w")
+    return True
+def modifyRoom():
+    hotelname = raw_input("Enter hotel name: ")
+    roomno = raw_input("Enter room number: ")
+    l = getHotels()
+    for i in l:
+        if i.name == hotelname:
+            for j in i._rooms:
+                if j._room_no == roomno:
+                    j.modify()
+                    break
+            else:
+                print "no such roomno in this hotel."
+            break
+    else:
+        print "no hotel of such name."
+    setHotels(l,"w")
+    return True
+def delHotel():
+    hotelname = raw_input("Enter hotel name: ")
+    l = getHotels()
+    for i in l:
+        if i.name == hotelname:
+            l.remove(i)
+    setHotels(l,"w")
+    return True
 def delRoom(hotelname,roomno):
-    f = open(hotelname+".dat","rb")
-    l = pickle.load(f)
-    f.close()
-    l.delRoom(roomno)
-    f = open(hotelname+".dat","wb")
-    pickle.dump(l,f)
-    f.close()
+    hotelname = raw_input("Enter hotel name: ")
+    roomno = raw_input("Enter room number: ")
+    l = getHotels()
+    for i in l:
+        if i.name == hotelname:
+            for j in i._room_nos:
+                if j==roomno:
+                    i.delRoom(j)
+                    break
+            else:
+                print "no such room no."
+                break
+    else:
+        print "no such hotel"
+    setHotels(l,"w")
+    return True
 def Exit():
-    return "exit"
+    return False
 def main():
     print"             *******  WELCOME TO BOOKING.PY  *******"
-    v = menu(options = {"Find":find,"Input hotels":inputHotels,"Exit":Exit},align = 25)
+    v = menu(options = {"Find":find,
+                        "Input hotels":inputHotels,
+                        "Exit":Exit,
+                        "Modify hotel":modifyHotel,
+                        "Modify room":modifyRoom,
+                        "delete room":delRoom,
+                        "delete hotel":delHotel,
+                        },align = 25)
     return v()
        
-infinite(main, br = "loop")
+while True:
+    if main()!=True:
+        break
 

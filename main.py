@@ -43,7 +43,31 @@ def find():
         else:
             print "\n No results found!.."
     return True
-
+def Filter():
+    print "Enter Filter details:"
+    loc = neoInput("Location : ",notnull = True)
+    v = []
+    l = getHotels()
+    for i in l:
+        if i.location == loc:
+            v.append(i)
+    while True:
+        if v:
+            print " "*10+"Hotel name"+" "*10+"minimum Price"
+            ops ={}
+            for i in v:
+                if i._rooms!=[]:
+                    ops[" "*10+i.name+" "*(20-len(i.name))+"Rs."+str(min([int(j.price) for j in i._rooms]))]=i
+            r = menu(options = ops)
+            r.show()
+            y = raw_input("\nPress Enter to stop seeing search results : ")
+            if y:
+                continue
+            else:
+                break
+        else:
+            print "\n No results found!.."
+    return True
 def inputHotels():
     while True:
         try:

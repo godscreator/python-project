@@ -45,28 +45,45 @@ def find():
     return True
 def Filter():
     print "Enter Filter details:"
-    loc = neoInput("Location : ",notnull = True)
-    v = []
+    th = template_hotel()
+    hot = Hotel()
+    l = ["location","type","meal","reservation_policy","area_details"]
+    for i in l:
+        t = i.title()+" .:  "
+        thdict = th.__dict__[i]
+        hot.__dict__[i] = neoInput(t,options=thdict["options"],help=thdict["help"],align = 25 ,notnull=False)
+    r = room(0,"")
+    tr = template_room()
+    l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
+    for i in l:
+        t = i.title()+" .:  "
+        trdict = tr.__dict__[i]
+        r.__dict__[i] = neoInput(t,options=trdict["options"],help=trdict["help"],align = 25 ,notnull=False)
+    hot._rooms=[r]
+    v,w = [],[]
     l = getHotels()
     for i in l:
-        if i.location == loc:
+        u = i.match(hot)
+        if u:
             v.append(i)
-    while True:
-        if v:
+            w.append(u)
+    if v:
+        while True:
             print " "*10+"Hotel name"+" "*10+"minimum Price"
             ops ={}
-            for i in v:
+            for j in range(len(v)):
+                i = v[j]
                 if i._rooms!=[]:
-                    ops[" "*10+i.name+" "*(20-len(i.name))+"Rs."+str(min([int(j.price) for j in i._rooms]))]=i
+                    ops[" "*10+i.name+" "*(20-len(i.name))+"Rs."+str(min([int(j.price) for j in i._rooms]))]=i,w[j]
             r = menu(options = ops)
-            r.show()
+            r[0].show(r[1])
             y = raw_input("\nPress Enter to stop seeing search results : ")
             if y:
                 continue
             else:
                 break
-        else:
-            print "\n No results found!.."
+    else:
+        print "\n No results found!.."
     return True
 def inputHotels():
     while True:
@@ -112,6 +129,17 @@ def modifyRoom():
         print "no hotel of such name."
     setHotels(l,"w")
     return True
+def addRoom():
+    hotelname = raw_input("Enter hotel name: ")
+    l = getHotels()
+    for i in l:
+        if i.name == hotelname:
+            i.addRoom()
+            break
+    else:
+        print "no hotel of such name."
+    setHotels(l,"w")
+    return True
 def delHotel():
     hotelname = raw_input("Enter hotel name: ")
     l = getHotels()
@@ -142,13 +170,15 @@ def Exit():
 def main():
     print"             *******  WELCOME TO BOOKING.PY  *******"
     v = menu(options = {"Find":find,
+                        "Filter":Filter,
+                        "Add room":addRoom,
                         "Input hotels":inputHotels,
                         "Exit":Exit,
                         "Modify hotel":modifyHotel,
                         "Modify room":modifyRoom,
                         "delete room":delRoom,
                         "delete hotel":delHotel,
-                        },align = 25)
+                        },align = 25,order=["Find","Filter","Input hotels","Add room","Modify hotel","Modify room","delete room","delete hotel","Exit"])
     return v()
        
 while True:

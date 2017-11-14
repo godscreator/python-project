@@ -36,7 +36,20 @@ class room:
             if v:
                 self.__dict__ [i] = v
             print
-        
+    def match(self,room):
+        l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
+        for i in l:
+            v = room.__dict__[i]
+            if v != "":
+                if self.__dict__ [i] != v:
+                    try:
+                        if v not in self.__dict__ [i]:
+                            return False
+                    except TypeError:
+                        print "Type error1"
+                        return False
+        else:
+            return True
     def show(self):
         l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
         for i in l:
@@ -68,14 +81,12 @@ class Hotel:
             thdict = th.__dict__[i]
             self.__dict__ [i] = neoInput(t,options=thdict["options"],help=thdict["help"],align = 25 ,notnull=True)
             print
-        def noofrooms():
+        while True:
             try:
                 n = int(neoInput("Enter no. of rooms : ",align = 25,notnull = True))
-                return n
+                break
             except ValueError:
                 print "room no. should be a number"
-                return False
-        n = infinite(noofrooms,br = False)
         for i in range(n):
             neoPrint("Enter the details of rooms : \n\n",align = 25)
             self.addRoom()
@@ -108,11 +119,47 @@ class Hotel:
             if v:
                 self.__dict__ [i] = v
             print
+
+    def match(self,hotel):
+##        th = template_hotel()
+##        l = ["location","type","meal","reservation_policy","area_details"]
+##        for i in l:
+##            t = i.title()+" .:  "
+##            thdict = th.__dict__[i]
+##            v = neoInput(t,options=thdict["options"],help=thdict["help"],align = 25 ,notnull=False)
+        l = ["location","type","meal","reservation_policy","area_details"]
+        for i in l:
+            v = hotel.__dict__[i]
+            if v:
+                if self.__dict__ [i] != v:
+                    try:
+                        if v not in self.__dict__ [i]:
+                            return []
+                    except TypeError:
+                        print "Type error 2"
+                        return []       
+        else:
+            k = []
+##            r = room(0,"")
+##            tr = template_room()
+##            l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
+##            for i in l:
+##                t = i.title()+" .:  "
+##                trdict = tr.__dict__[i]
+##                v = neoInput(t,options=trdict["options"],help=trdict["help"],align = 25 ,notnull=False)
+            for i in self._rooms:
+                if i.match(hotel._rooms[0]):
+                    k.append(i._room_no)
+            return k
         
-    def show(self,rooms = "ALL"):
+    def show(self,roomnos = "ALL"):
         print "*"*60
-        if rooms == "ALL":
+        if roomnos == "ALL":
             rooms = self._rooms
+        else:
+            rooms = []
+            for i in roomnos:
+                rooms.append(self._rooms[self._room_nos.index(i)])
         l = ["name","location","type","meal","reservation_policy","property_details","area_details"]
         for i in l:
            t = i.title()+" : "

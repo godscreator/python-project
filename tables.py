@@ -10,7 +10,7 @@ class Log:
         self.start = start
         self.end   = end
         self.days  = []
-        self.hotels= [] 
+        self.names= [] 
         self.logs  = []
         self.initialize(start,end)
     def initialize(self,start,end):
@@ -29,25 +29,25 @@ class Log:
                     else:
                         d = "0"+str(k)
                     self.days.append(d+m+str(i))
-    def append(self,hotelname):
-        self.hotels.append(hotelname)
+    def append(self,name):
+        self.names.append(name)
         self.logs.append([])
         for i in range(len(self.days)):
             self.logs[-1].append(False)
-    def check(self,hotelname,date):
-        i = self.hotels.index(hotelname)
+    def check(self,name,date):
+        i = self.names.index(name)
         return self.logs[i][self.days.index(date)]
-    def set(self,hotelname,date,val):
-        i = self.hotels.index(hotelname)
+    def set(self,name,date,val):
+        i = self.names.index(name)
         self.logs[i][self.days.index(date)] = val
     def Print(self):
         print "Date    ",
-        for i in self.hotels:
+        for i in self.names:
             print i,
         print 
         for i in range(len(self.days)):
             print self.days[i],
-            for j in range(len(self.hotels)):
+            for j in range(len(self.names)):
                 print self.logs[j][i],
             print 
 

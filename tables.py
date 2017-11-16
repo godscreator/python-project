@@ -19,21 +19,13 @@ class Log:
             if isLeapYear(i):
                 days[1] = 29
             for j in range(1,13):
-                if len(str(j))>1:
-                    m = str(j)
-                else:
-                    m = "0"+str(j)
                 for k in range(1,days[j-1]+1):
-                    if len(str(k))>1:
-                        d = str(k)
-                    else:
-                        d = "0"+str(k)
-                    self.days.append(d+m+str(i))
+                    self.days.append(str(k)+"/"+str(j)+"/"+str(i))
     def append(self,name):
         self.names.append(name)
         self.logs.append([])
         for i in range(len(self.days)):
-            self.logs[-1].append(False)
+            self.logs[-1].append("")
     def check(self,name,date):
         i = self.names.index(name)
         return self.logs[i][self.days.index(date)]

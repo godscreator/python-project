@@ -1,6 +1,10 @@
 from hotel import *
 from styler import *
+from user import *
+from tables import *
 import pickle
+
+User = None
 
 def getHotels():
     f = open("Hotels.dat","rb")
@@ -17,7 +21,36 @@ def setHotels(l,mode = "a"):
     for i in l:
         pickle.dump(i,f)
     f.close()
-    
+def book(name):
+    l = getLog("Log.dat")
+    print "Check-in-date:"
+    d1 = int(raw_input("Date:"))
+    m1 = int(raw_input("Month:"))
+    y1 = int(raw_input("Year:"))
+    cin = d1+"/"+m1+"/"+y1
+    print "Check-out-date:"
+    d2 = int(raw_input("Date:"))
+    m2 = int(raw_input("Month:"))
+    y2 = int(raw_input("Year:"))
+    cout = d2+"/"+m2+"/"+y2
+    g=l.days[l.days.index(cin):l.days.index(cout)]
+    for i in g:
+        if l.check(name,i):
+            print " Room not available"
+            break
+    else:
+        global User
+        for i in g:
+            l.set(name,i,User.id)
+        hotelname,roomno=name.split("_")
+        User.book(hotelname,roomno,cin,cout)
+        li = getUsers("Users.dat")
+        for i in range(len(li)):
+            if us.id==li[i].id :
+                li[i]=User
+                break
+        setUsers("Users.dat",li)
+        print "Booked !"
 def find():
     print "Enter Search details:"
     loc = neoInput("Location : ",notnull = True)
@@ -139,7 +172,7 @@ def addRoom():
     else:
         print "no hotel of such name."
     setHotels(l,"w")
-    return True
+    
 def delHotel():
     hotelname = raw_input("Enter hotel name: ")
     l = getHotels()
@@ -147,8 +180,8 @@ def delHotel():
         if i.name == hotelname:
             l.remove(i)
     setHotels(l,"w")
-    return True
-def delRoom(hotelname,roomno):
+    
+def delRoom():
     hotelname = raw_input("Enter hotel name: ")
     roomno = raw_input("Enter room number: ")
     l = getHotels()
@@ -164,24 +197,56 @@ def delRoom(hotelname,roomno):
     else:
         print "no such hotel"
     setHotels(l,"w")
-    return True
+    
 def Exit():
-    return False
+    return "exit"
+def signup():
+    l = getUsers("Users.dat")
+    us = user()
+    us.input()
+    for i in l:
+        if us.id==i.id :
+            print "This id is already in use."
+            return True
+    l.append(us)
+    setUsers("Users.dat",l)
+    global User
+    User = us
+    print "sign up successful!"
+    
+def signin():
+    l = getUsers("Users.dat")
+    us = user()
+    us.input()
+    for i in l:
+        if us.id==i.id and us.password==i.password:
+            global User
+            User = i
+            break
+    else:
+        print "No such user!"
+        return True
+    print "sign in successful!"
+    
 def main():
-    print"             *******  WELCOME TO BOOKING.PY  *******"
-    v = menu(options = {"Find":find,
-                        "Filter":Filter,
-                        "Add room":addRoom,
-                        "Input hotels":inputHotels,
-                        "Exit":Exit,
-                        "Modify hotel":modifyHotel,
-                        "Modify room":modifyRoom,
-                        "delete room":delRoom,
-                        "delete hotel":delHotel,
-                        },align = 25,order=["Find","Filter","Input hotels","Add room","Modify hotel","Modify room","delete room","delete hotel","Exit"])
-    return v()
-       
-while True:
-    if main()!=True:
-        break
+    while True:
+        print"             *******  WELCOME TO BOOKING.PY  *******"
+        v = menu(options = {"Find":find,
+                            "Filter":Filter,
+                            "Add room":addRoom,
+                            "Sign up":signup,
+                            "Sign in":signin,
+                            "Input hotels":inputHotels,
+                            "Exit":Exit,
+                            "Modify hotel":modifyHotel,
+                            "Modify room":modifyRoom,
+                            "delete room":delRoom,
+                            "delete hotel":delHotel,
+                            },align = 25,
+                 order=["Find","Filter","Sign up","Sign in","Input hotels","Add room",
+                        "Modify hotel","Modify room","delete room","delete hotel","Exit"])
+        if v() == "exit":
+            break
+
+main()
 

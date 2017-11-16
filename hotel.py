@@ -46,7 +46,7 @@ class room:
                         if v not in self.__dict__ [i]:
                             return False
                     except TypeError:
-                        print "Type error1"
+                        pass
                         return False
         else:
             return True
@@ -121,12 +121,6 @@ class Hotel:
             print
 
     def match(self,hotel):
-##        th = template_hotel()
-##        l = ["location","type","meal","reservation_policy","area_details"]
-##        for i in l:
-##            t = i.title()+" .:  "
-##            thdict = th.__dict__[i]
-##            v = neoInput(t,options=thdict["options"],help=thdict["help"],align = 25 ,notnull=False)
         l = ["location","type","meal","reservation_policy","area_details"]
         for i in l:
             v = hotel.__dict__[i]
@@ -140,13 +134,6 @@ class Hotel:
                         return []       
         else:
             k = []
-##            r = room(0,"")
-##            tr = template_room()
-##            l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
-##            for i in l:
-##                t = i.title()+" .:  "
-##                trdict = tr.__dict__[i]
-##                v = neoInput(t,options=trdict["options"],help=trdict["help"],align = 25 ,notnull=False)
             for i in self._rooms:
                 if i.match(hotel._rooms[0]):
                     k.append(i._room_no)

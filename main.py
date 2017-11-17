@@ -93,7 +93,6 @@ def inputHotels():
     setHotels(v)
 def modifyHotel():
     hotelname = raw_input("Enter hotel name: ")
-    roomno = raw_input("Enter room number: ")
     l = getHotels()
     for i in l:
         if i.name == hotelname:
@@ -110,7 +109,7 @@ def modifyRoom():
     for i in l:
         if i.name == hotelname:
             for j in i._rooms:
-                if j._room_no == roomno:
+                if j._roomid == int(roomno):
                     j.modify()
                     break
             else:
@@ -129,7 +128,7 @@ def addRoom():
             break
     else:
         print "no hotel of such name."
-    setHotels(l,"w")
+    setHotels(l)
     
 def delHotel():
     hotelname = raw_input("Enter hotel name: ")
@@ -137,7 +136,7 @@ def delHotel():
     for i in l:
         if i.name == hotelname:
             l.remove(i)
-    setHotels(l,"w")
+    setHotels(l)
     
 def delRoom():
     hotelname = raw_input("Enter hotel name: ")
@@ -145,16 +144,14 @@ def delRoom():
     l = getHotels()
     for i in l:
         if i.name == hotelname:
-            for j in i._room_nos:
-                if j==roomno:
-                    i.delRoom(j)
-                    break
-            else:
+            try:
+                i.delRoom(int(roomno))
+            except ValueError:
                 print "no such room no."
-                break
+            break
     else:
         print "no such hotel"
-    setHotels(l,"w")
+    setHotels(l)
     
 def Exit():
     return "exit"

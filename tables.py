@@ -32,8 +32,9 @@ class Log:
         self.logs.append(l)
     def pop(self,roomid):
         # delete a room to the log.
-        self.rooms.pop(roomid)
-        self.logs.pop(roomid)
+        i = self.rooms.index(roomid)
+        self.rooms.pop(i)
+        self.logs.pop(i)
     def inDays(self,start,end):
         # generator to easily loop over days.
         i = self.days.index(start)

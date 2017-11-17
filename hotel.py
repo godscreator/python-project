@@ -28,7 +28,11 @@ class room:
             options=room.temp.__dict__[i]["options"],help=room.temp.__dict__[i]["help"],align = 25 ,notnull=True)
         
     def modify(self):
+        d = {}
         for i in room.order:
+            d[i]=i
+        l = menu(d,align = 25,order=room.order,select=True)
+        for i in l:
             v = neoInput(i+" :  ",
             options=room.temp.__dict__[i]["options"],help=room.temp.__dict__[i]["help"],align = 25 ,notnull=False)
             if v:
@@ -98,13 +102,19 @@ class Hotel:
     def delRoom(self,roomid):
         self._rooms.pop(roomid)
         l = getLog("Log.dat")
-        l.pop(str(self._hotelid)+"_"+str(len(self._rooms)))
+        l.pop(str(self._hotelid)+"_"+str(len(self._rooms)-1))
         setLog("Log.dat",l)
             
     def modify(self):
+        d = {}
         for i in Hotel.order:
+            d[i]=i
+        l = menu(d,align = 25,order=Hotel.order,select=True)
+        for i in l:
             v = neoInput(i+" :  ",
-            options=Hotel.temp.__dict__[i]["options"],help=Hotel.temp.__dict__[i]["help"],align = 25 ,notnull=False)
+            options=Hotel.temp.__dict__[i]["options"],
+            help=Hotel.temp.__dict__[i]["help"],
+            align = 25 ,notnull=False)
             if v:
                 self.__dict__ [i] = v
 

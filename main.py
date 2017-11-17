@@ -6,21 +6,6 @@ import pickle
 
 User = None
 
-def getHotels():
-    f = open("Hotels.dat","rb")
-    l = []
-    while True:
-        try:
-            l.append(pickle.load(f))
-        except EOFError:
-            break
-    f.close()
-    return l
-def setHotels(l,mode = "a"):
-    f = open("Hotels.dat",mode+"b")
-    for i in l:
-        pickle.dump(i,f)
-    f.close()
 def book(name):
     l = getLog("Log.dat")
     print "Check-in-date:"
@@ -51,23 +36,16 @@ def book(name):
                 break
         setUsers("Users.dat",li)
         print "Booked !"
-def find():
-    print "Enter Search details:"
-    loc = neoInput("Location : ",notnull = True)
-    v = []
-    l = getHotels()
-    for i in l:
-        if i.location == loc:
-            v.append(i)
+def showResults(v,ind,outd):
     while True:
         if v:
-            print " "*10+"Hotel name"+" "*10+"minimum Price"
+            print " "*10+"Hotel name"+" "*10+"minimum Price",
             ops ={}
             for i in v:
                 if i._rooms!=[]:
                     ops[" "*10+i.name+" "*(20-len(i.name))+"Rs."+str(min([int(j.price) for j in i._rooms]))]=i
             r = menu(options = ops)
-            r.show()
+            r.show(Book=[ind,outd,User.id])
             y = raw_input("\nPress Enter to stop seeing search results : ")
             if y:
                 continue
@@ -75,7 +53,28 @@ def find():
                 break
         else:
             print "\n No results found!.."
-    return True
+            break
+def find():
+    print "Enter Search details:"
+    loc = neoInput("Location : ",notnull = True)
+    print "Check-in-date:"
+    d1 = int(raw_input("Date:"))
+    m1 = int(raw_input("Month:"))
+    y1 = int(raw_input("Year:"))
+    cin = d1+"/"+m1+"/"+y1
+    print "Check-out-date:"
+    d2 = int(raw_input("Date:"))
+    m2 = int(raw_input("Month:"))
+    y2 = int(raw_input("Year:"))
+    cout = d2+"/"+m2+"/"+y2
+    v = []
+    l = getHotels()
+    for i in l:
+        if i.location == loc:
+            v.append(i)
+    showResults(v,cin,cout)
+
+    
 def Filter():
     print "Enter Filter details:"
     th = template_hotel()
@@ -100,24 +99,8 @@ def Filter():
         if u:
             v.append(i)
             w.append(u)
-    if v:
-        while True:
-            print " "*10+"Hotel name"+" "*10+"minimum Price"
-            ops ={}
-            for j in range(len(v)):
-                i = v[j]
-                if i._rooms!=[]:
-                    ops[" "*10+i.name+" "*(20-len(i.name))+"Rs."+str(min([int(j.price) for j in i._rooms]))]=i,w[j]
-            r = menu(options = ops)
-            r[0].show(r[1])
-            y = raw_input("\nPress Enter to stop seeing search results : ")
-            if y:
-                continue
-            else:
-                break
-    else:
-        print "\n No results found!.."
-    return True
+    showResults(v)
+
 def inputHotels():
     while True:
         try:
@@ -130,12 +113,10 @@ def inputHotels():
         h = Hotel()
         h.input()
         v.append(h)
-    setHotels(v,"a")
-    return True
+    setHotels(v)
 def modifyHotel():
     hotelname = raw_input("Enter hotel name: ")
     roomno = raw_input("Enter room number: ")
-    f = open("Hotels.dat","rb")
     l = getHotels()
     for i in l:
         if i.name == hotelname:
@@ -143,8 +124,8 @@ def modifyHotel():
             break
     else:
         print "no hotel of such name."
-    setHotels(l,"w")
-    return True
+    setHotels(l)
+   
 def modifyRoom():
     hotelname = raw_input("Enter hotel name: ")
     roomno = raw_input("Enter room number: ")
@@ -160,8 +141,8 @@ def modifyRoom():
             break
     else:
         print "no hotel of such name."
-    setHotels(l,"w")
-    return True
+    setHotels(l)
+    
 def addRoom():
     hotelname = raw_input("Enter hotel name: ")
     l = getHotels()

@@ -1,9 +1,15 @@
 from styler import *
 from template import *
+from tables import *
+
 class room:
-    def __init__(self,roomno,hotelname):
-        self._hotel_name = hotelname
-        self._room_no = roomno
+    # class variables.
+    order = ["no_of_adults","no_of_children","type","size","price","beds",              # represents order in
+             "bathroom","air_conditioning","internet","entertainment","housekeeping"]   # which data is presented.
+    temp  = template_room() # represents template of room.
+    def __init__(self,roomid,hotelid):
+        self._hotelid = hotelid
+        self._roomid = roomid
         self.no_of_adults = 0
         self.no_of_children = 0
         self.type = ""
@@ -17,52 +23,47 @@ class room:
         self.housekeeping = ""
     
     def input(self):
-        tr = template_room()
-        l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
-        for i in l:
-            t = i.title()+" :  "
-            trdict = tr.__dict__[i]
-            self.__dict__ [i] = neoInput(t,options=trdict["options"],help=trdict["help"],align = 25 ,notnull=True)
-            print
-        
+        for i in room.order:
+            self.__dict__ [i] = neoInput(i+" :  ",
+            options=room.temp.__dict__[i]["options"],help=room.temp.__dict__[i]["help"],align = 25 ,notnull=True)
         
     def modify(self):
-        tr = template_room()
-        l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
-        for i in l:
-            t = i.title()+" .:  "
-            trdict = tr.__dict__[i]
-            v = neoInput(t,options=trdict["options"],help=trdict["help"],align = 25 ,notnull=False)
+        for i in room.order:
+            v = neoInput(i+" :  ",
+            options=room.temp.__dict__[i]["options"],help=room.temp.__dict__[i]["help"],align = 25 ,notnull=False)
             if v:
                 self.__dict__ [i] = v
-            print
-    def match(self,room):
-        l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
-        for i in l:
-            v = room.__dict__[i]
+
+    def match(self,other):
+        for i in room.order:
+            v = other.__dict__[i]
             if v != "":
                 if self.__dict__ [i] != v:
-                    try:
+                    if len(self.__dict__ [i])>1:
                         if v not in self.__dict__ [i]:
                             return False
-                    except TypeError:
-                        pass
+                    else:
                         return False
         else:
             return True
+    def book(self,ind,outd,userid):
+        l = getLog("Log.dat")
+        l.book(hid+"_"+rid,ind,outd,userid)
+        setLog("Log.dat",l)
     def show(self):
-        l = ["no_of_adults","no_of_children","type","size","price","beds","bathroom","air_conditioning","internet","entertainment","housekeeping"]
-        for i in l:
-           t = i.title()+" : "
-           neoPrint (t,align = 25)
+        for i in room.order:
+           neoPrint (i+" : ",align = 25)
            print self.__dict__[i]
         
         
 
 class Hotel:
+    # class variables.
+    order = ["name","location","type","meal","reservation_policy","property_details","area_details"]
+    temp  = template_hotel()
     def __init__(self):
+        self._hotelid = 0
         self._rooms = []
-        self._room_nos = []
         self.name =""
         self.location = ""
         self.type = ""
@@ -72,15 +73,9 @@ class Hotel:
         self.area_details = ""
         
     def input(self):
-        self.name = neoInput("Name .:  ",align=25,notnull = True)
-        print 
-        th = template_hotel()
-        l = ["location","type","meal","reservation_policy","property_details","area_details"]
-        for i in l:
-            t = i.title()+" :  "
-            thdict = th.__dict__[i]
-            self.__dict__ [i] = neoInput(t,options=thdict["options"],help=thdict["help"],align = 25 ,notnull=True)
-            print
+        for i in Hotel.order:
+            self.__dict__ [i] = neoInput(i+" :  ",
+            options=Hotel.temp.__dict__[i]["options"],help=Hotel.temp.__dict__[i]["help"],align = 25 ,notnull=True)
         while True:
             try:
                 n = int(neoInput("Enter no. of rooms : ",align = 25,notnull = True))
@@ -92,68 +87,73 @@ class Hotel:
             self.addRoom()
             
     def addRoom(self):
-        rno = neoInput("Enter the room number: ",align = 25,notnull = True)
-        print
-        r = room(rno,self.name)
+        r = room(len(self._rooms),self._hotelid)
         r.input()
-        self._room_nos.append(rno)
         self._rooms.append(r)
+        l = getLog("Log.dat")
+        l.append(str(self._hotelid)+"_"+str(len(self._rooms)))
+        setLog("Log.dat",l)
         print "-"*70
         
-    def delRoom(self,rno):
-        i = self._room_nos.index(rno)
-        self._room_nos.pop(i)
-        self._rooms.pop(i)
-        
-    def delHotel(self):
-        for i in self._room_nos:
-            self.delRoom(i)
+    def delRoom(self,roomid):
+        self._rooms.pop(roomid)
+        l = getLog("Log.dat")
+        l.pop(str(self._hotelid)+"_"+str(len(self._rooms)))
+        setLog("Log.dat",l)
             
     def modify(self):
-        th = template_hotel()
-        l = ["location","type","meal","reservation_policy","property_details","area_details"]
-        for i in l:
-            t = i.title()+" .:  "
-            thdict = th.__dict__[i]
-            v = neoInput(t,options=thdict["options"],help=thdict["help"],align = 25 ,notnull=False)
+        for i in Hotel.order:
+            v = neoInput(i+" :  ",
+            options=Hotel.temp.__dict__[i]["options"],help=Hotel.temp.__dict__[i]["help"],align = 25 ,notnull=False)
             if v:
                 self.__dict__ [i] = v
-            print
 
-    def match(self,hotel):
-        l = ["location","type","meal","reservation_policy","area_details"]
-        for i in l:
-            v = hotel.__dict__[i]
+    def match(self,other):
+        for i in Hotel.order:
+            v = other.__dict__[i]
             if v:
                 if self.__dict__ [i] != v:
-                    try:
+                    if len(self.__dict__ [i])>1:
                         if v not in self.__dict__ [i]:
                             return []
-                    except TypeError:
-                        print "Type error 2"
-                        return []       
+                    else:
+                        return []
         else:
             k = []
-            for i in self._rooms:
-                if i.match(hotel._rooms[0]):
-                    k.append(i._room_no)
+            for i in range(len(self._rooms)):
+                if self._rooms[i].match(other._rooms[0]):
+                    k.append(i)
             return k
         
-    def show(self,roomnos = "ALL"):
+    def show(self,roomids = "ALL",Book=[]):#Book = [indate,outdate,userid]
         print "*"*60
-        if roomnos == "ALL":
+        if roomids == "ALL":
             rooms = self._rooms
         else:
             rooms = []
-            for i in roomnos:
-                rooms.append(self._rooms[self._room_nos.index(i)])
-        l = ["name","location","type","meal","reservation_policy","property_details","area_details"]
-        for i in l:
-           t = i.title()+" : "
-           neoPrint (t,align = 25)
+            for i in roomids:
+                rooms.append(self._rooms[i])
+        for i in Hotel.order:
+           neoPrint (i+" : ",align = 25)
            print self.__dict__[i]
         print "\nRoom details:"
         for i in rooms:
-            i.show()
             print "-"*60
+            i.show()
+            if Book:
+                g = raw_input("\n Book now (y/n):")
+                if g=="y":
+                    i.book(*Book)
+                    print "Booking complete!.."
+            print "-"*60
+        print "*"*60
 
+def getHotels():
+    f = open("Hotels.dat","rb")
+    l=pickle.load(f)
+    f.close()
+    return l
+def setHotels(l):
+    f = open("Hotels.dat","wb")
+    pickle.dump(l,f)
+    f.close()

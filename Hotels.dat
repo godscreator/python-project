@@ -5,7 +5,7 @@ p1
 (dp2
 S'property_details'
 p3
-S'go'
+S'fool'
 p4
 sS'name'
 p5
@@ -52,7 +52,7 @@ S'2'
 p24
 sS'price'
 p25
-S'2000'
+S'1200'
 p26
 sS'internet'
 p27
@@ -71,18 +71,18 @@ S'0'
 p33
 sS'air_conditioning'
 p34
-S'AC'
+S'thermostat'
 p35
 sS'type'
 p36
-S'Suite'
+S'Junior suite'
 p37
 sS'size'
 p38
 S'50x50 ft sq.'
 p39
 sbasg36
-S'Hotel'
+S'Villa'
 p40
 sS'meal'
 p41

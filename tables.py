@@ -64,7 +64,11 @@ class Log:
             print 
 
 def getLog(name):
-    f = open(name,"rb")
+    try:
+        f = open(name,"rb")
+    except IOError:
+        setLog("Log.dat",Log(2000,2050))
+        f = open(name,"rb")
     log = pickle.load(f)
     f.close()
     return log

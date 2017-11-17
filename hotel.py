@@ -48,7 +48,7 @@ class room:
             return True
     def book(self,ind,outd,userid):
         l = getLog("Log.dat")
-        l.book(hid+"_"+rid,ind,outd,userid)
+        l.setin(str(self._hotelid)+"_"+str(self._roomid),ind,outd,userid)
         setLog("Log.dat",l)
     def show(self):
         for i in room.order:
@@ -91,7 +91,7 @@ class Hotel:
         r.input()
         self._rooms.append(r)
         l = getLog("Log.dat")
-        l.append(str(self._hotelid)+"_"+str(len(self._rooms)))
+        l.append(str(self._hotelid)+"_"+str(len(self._rooms)-1))
         setLog("Log.dat",l)
         print "-"*70
         

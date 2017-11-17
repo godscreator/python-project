@@ -6,36 +6,6 @@ import pickle
 
 User = None
 
-def book(name):
-    l = getLog("Log.dat")
-    print "Check-in-date:"
-    d1 = int(raw_input("Date:"))
-    m1 = int(raw_input("Month:"))
-    y1 = int(raw_input("Year:"))
-    cin = d1+"/"+m1+"/"+y1
-    print "Check-out-date:"
-    d2 = int(raw_input("Date:"))
-    m2 = int(raw_input("Month:"))
-    y2 = int(raw_input("Year:"))
-    cout = d2+"/"+m2+"/"+y2
-    g=l.days[l.days.index(cin):l.days.index(cout)]
-    for i in g:
-        if l.check(name,i):
-            print " Room not available"
-            break
-    else:
-        global User
-        for i in g:
-            l.set(name,i,User.id)
-        hotelname,roomno=name.split("_")
-        User.book(hotelname,roomno,cin,cout)
-        li = getUsers("Users.dat")
-        for i in range(len(li)):
-            if us.id==li[i].id :
-                li[i]=User
-                break
-        setUsers("Users.dat",li)
-        print "Booked !"
 def showResults(v,ind,outd):
     while True:
         if v:
@@ -45,7 +15,11 @@ def showResults(v,ind,outd):
                 if i._rooms!=[]:
                     ops[" "*10+i.name+" "*(20-len(i.name))+"Rs."+str(min([int(j.price) for j in i._rooms]))]=i
             r = menu(options = ops)
-            r.show(Book=[ind,outd,User.id])
+            if User:
+                k = [ind,outd,User.id]
+            else:
+                k = []
+            r.show(Book=k)
             y = raw_input("\nPress Enter to stop seeing search results : ")
             if y:
                 continue
@@ -61,17 +35,20 @@ def find():
     d1 = int(raw_input("Date:"))
     m1 = int(raw_input("Month:"))
     y1 = int(raw_input("Year:"))
-    cin = d1+"/"+m1+"/"+y1
+    cin = str(d1)+"/"+str(m1)+"/"+str(y1)
     print "Check-out-date:"
     d2 = int(raw_input("Date:"))
     m2 = int(raw_input("Month:"))
     y2 = int(raw_input("Year:"))
-    cout = d2+"/"+m2+"/"+y2
+    cout = str(d2)+"/"+str(m2)+"/"+str(y2)
     v = []
     l = getHotels()
+    LOG = getLog("Log.dat")
     for i in l:
         if i.location == loc:
-            v.append(i)
+            for j in i._rooms:
+                if LOG.getin(str(i._hotelid)+"_"+str(j._roomid),cin,cout):
+                    v.append(i)
     showResults(v,cin,cout)
 
     

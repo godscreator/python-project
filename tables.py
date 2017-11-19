@@ -68,7 +68,7 @@ def getLog(name):
     try:
         f = open(name,"rb")
     except IOError:
-        setLog("Log.dat",Log(2000,2050))
+        setLog("Log.dat",Log(2000,2050))#initialize log if not present.
         f = open(name,"rb")
     log = pickle.load(f)
     f.close()
